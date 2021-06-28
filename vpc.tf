@@ -37,7 +37,13 @@ output "vpc_id" {
   description = "VPC subnets."
   value       = module.vpc.private_subnets
 }
+
 output "vpc_database_subnet" {
   description = "VPC database subnet group."
   value       = module.vpc.database_subnet_group
+}
+
+output "eks_node_sg" {
+  description = "sg of worker nodes on cluster"
+  value       = module.kubernetes-cluster-provision.aws_eks_worker_security_group_id
 }

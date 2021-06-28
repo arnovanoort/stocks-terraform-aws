@@ -19,9 +19,10 @@ module "kubernetes-cluster-provision" {
 }
 
 module "kubernetes-cluster-resources" {
-  source        = "./stock-eks-cluster-resources"
-  db_hostname = module.stock-reader-db.db-hostname
-  eks_cluster = module.kubernetes-cluster-provision
+  source                                = "./stock-eks-cluster-resources"
+  stock-reader-db-hostname              = module.stock-reader-db.stock-reader-db-hostname
+  stock-trading-algorithms-db-hostname  = module.stock-reader-db.stock-trading-algorithms-db-hostname
+  eks_cluster                           = module.kubernetes-cluster-provision
 }
 
 module "stock-reader-db" {

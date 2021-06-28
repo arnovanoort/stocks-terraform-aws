@@ -1,5 +1,3 @@
-variable "db_hostname" {}
-
 resource "kubernetes_deployment" "stock_reader" {
   metadata {
     name = "stock-reader-deployment"
@@ -42,11 +40,65 @@ resource "kubernetes_deployment" "stock_reader" {
           }
           env {
             name  = "db.url"
-            value = "r2dbc:postgresql://${var.db_hostname}"
+            value = "r2dbc:postgresql://${var.stock-reader-db-hostname}"
           }
           env {
             name  = "spring.flyway.url"
-            value = "jdbc:postgresql://${var.db_hostname}/stocks"
+            value = "jdbc:postgresql://${var.stock-reader-db-hostname}/stocks"
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_deployment" "stock_trading_algorithms" {
+  metadata {
+    name = "stock-trading-algorithms"
+    labels = {
+      App = "stock-trading-algorithms"
+    }
+  }
+
+  spec {
+    replicas = 2
+    selector {
+      match_labels = {
+        App = "stock-trading-algorithms"
+      }
+    }
+    template {
+      metadata {
+        labels = {
+          App = "stock-trading-algorithms"
+        }
+      }
+      spec {
+        container {
+          image = "temmink/stock-trading-algorithms:latest"
+          name  = "stock-trading-algorithms"
+
+          port {
+            container_port = 8081
+          }
+
+          resources {
+            limits = {
+              cpu    = "0.5"
+              memory = "512Mi"
+            }
+            requests = {
+              cpu    = "250m"
+              memory = "50Mi"
+            }
+          }
+          env {
+            name  = "spring.datasource.url"
+            value = "jdbc:postgresql://${var.stock-trading-algorithms-db-hostname}/tradingalgorithms"
+          }
+          env {
+            name  = "stockdata.url.host"
+            value = "http://stock-reader"
           }
         }
       }
