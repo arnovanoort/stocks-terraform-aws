@@ -32,3 +32,7 @@ output "cluster_cert_auth" {
   description = "Kubernetes Cluster Name"
   value       = module.eks.cluster_certificate_authority_data
 }
+
+output "aws_eks_worker_security_group_id" {
+  value = module.eks.worker_security_group_id
+}

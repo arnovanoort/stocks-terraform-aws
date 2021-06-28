@@ -49,11 +49,4 @@ data "aws_eks_cluster_auth" "cluster" {
   name = module.eks.cluster_id
 }
 
-output "aws_eks_worker_security_group_id" {
-  value = module.eks.worker_security_group_id
-}
-
-output "db-hostname" {
-  value = data.aws_eks_cluster.cluster.vpc_config
-}
 
